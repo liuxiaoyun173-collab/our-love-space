@@ -1,1 +1,1202 @@
-# t
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我们的专属空间</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary-color: #ff6b93;
+            --secondary-color: #7ec4cf;
+            --accent-color: #ffb6c1;
+            --bg-color: #fff9fb;
+            --text-color: #333;
+            --light-text: #666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecef 0%, #fdeff3 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+        }
+        
+        .avatar-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+        }
+        
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary-color);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .app-title {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .app-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .countdown-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            padding: 0 10px;
+            background: white;
+            border-bottom: 1px solid #eee;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .nav-tab {
+            padding: 12px 15px;
+            white-space: nowrap;
+            cursor: pointer;
+            color: var(--light-text);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .content-section {
+            display: none;
+            padding: 20px;
+            min-height: 60vh;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 相册样式 */
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .album-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        
+        .album-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .album-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 音乐播放器样式 */
+        .music-player {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .now-playing {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .audio-controls {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .playlist {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .playlist-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .playlist-item:hover, .playlist-item.active {
+            background: rgba(255, 107, 147, 0.1);
+        }
+        
+        /* 日记样式 */
+        .diary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .diary-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .diary-date {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            margin-bottom: 5px;
+        }
+        
+        .diary-content {
+            margin: 10px 0;
+        }
+        
+        /* 记账样式 */
+        .expense-form {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .expense-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* 旅游计划样式 */
+        .travel-plan {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+        }
+        
+        .travel-date {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .travel-destination {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 360px) {
+            .album-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .app-title {
+                font-size: 1.3rem;
+            }
+            
+            .avatar-container {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 500px;
+            }
+        }
+        
+        .no-select {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--light-text);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 15px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container no-select">
+        <header class="app-header">
+            <div class="avatar-container" id="avatar-container">
+                <img class="avatar-img" id="avatar-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY5YTllIi8+CiAgPHBhdGggZD0iTTUwLDgwIEMzMCw2MCAxMCw0MCA1MCwyMCBDOTAsNDAgNzAsNjAgNTAsODAgWiIgZmlsbD0iI2ZmNmI5MyIvPgo8L3N2Zz4=" alt="头像">
+                <div class="avatar-upload" id="avatar-upload">+</div>
+                <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+            </div>
+            <h1 class="app-title">我们的专属空间</h1>
+            <p class="app-subtitle">记录我们的点点滴滴</p>
+            
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-days">--</div>
+                    <div class="countdown-label">天</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-hours">--</div>
+                    <div class="countdown-label">时</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-minutes">--</div>
+                    <div class="countdown-label">分</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-seconds">--</div>
+                    <div class="countdown-label">秒</div>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="nav-tabs">
+            <div class="nav-tab active" data-tab="memories">相册</div>
+            <div class="nav-tab" data-tab="music">音乐</div>
+            <div class="nav-tab" data-tab="diary">日记</div>
+            <div class="nav-tab" data-tab="expense">记账</div>
+            <div class="nav-tab" data-tab="travel">旅行计划</div>
+            <div class="nav-tab" data-tab="countdowns">倒计时</div>
+        </nav>
+        
+        <main>
+            <!-- 相册部分 -->
+            <section id="memories" class="content-section active">
+                <div class="section-title">
+                    <span>我们的回忆</span>
+                    <button class="add-btn" id="add-photo-btn">+</button>
+                </div>
+                <div class="album-grid" id="album-container">
+                    <!-- 相册内容将通过JavaScript动态加载 -->
+                </div>
+            </section>
+            
+            <!-- 音乐部分 -->
+            <section id="music" class="content-section">
+                <div class="section-title">
+                    <span>专属音乐</span>
+                    <button class="add-btn" id="add-music-btn">+</button>
+                </div>
+                <div class="music-player">
+                    <div class="now-playing" id="now-playing">选择一首歌曲</div>
+                    <audio controls class="audio-controls" id="audio-player">
+                        您的浏览器不支持音频播放
+                    </audio>
+                </div>
+                <div class="playlist" id="playlist">
+                    <!-- 播放列表将通过JavaScript动态加载 -->
+                </div>
+            </section>
+            
+            <!-- 日记部分 -->
+            <section id="diary" class="content-section">
+                <div class="section-title">
+                    <span>恋爱日记</span>
+                    <button class="add-btn" id="add-diary-btn">+</button>
+                </div>
+                <div class="diary-list" id="diary-container">
+                    <!-- 日记内容将通过JavaScript动态加载 -->
+                </div>
+            </section>
+            
+            <!-- 记账部分 -->
+            <section id="expense" class="content-section">
+                <div class="section-title">
+                    <span>共同记账</span>
+                    <button class="add-btn" id="add-expense-btn">+</button>
+                </div>
+                <div class="expense-form" id="expense-form">
+                    <div class="form-group">
+                        <label for="expense-desc">项目描述</label>
+                        <input type="text" id="expense-desc" class="form-control" placeholder="例如：晚餐、电影票等">
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-amount">金额 (元)</label>
+                        <input type="number" id="expense-amount" class="form-control" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="expense-category">类别</label>
+                        <select id="expense-category" class="form-control">
+                            <option value="餐饮">餐饮</option>
+                            <option value="娱乐">娱乐</option>
+                            <option value="交通">交通</option>
+                            <option value="购物">购物</option>
+                            <option value="旅行">旅行</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <button class="btn" id="save-expense-btn">保存记录</button>
+                </div>
+                <div class="expense-list" id="expense-container">
+                    <!-- 记账内容将通过JavaScript动态加载 -->
+                </div>
+            </section>
+            
+            <!-- 旅行计划部分 -->
+            <section id="travel" class="content-section">
+                <div class="section-title">
+                    <span>旅行计划</span>
+                    <button class="add-btn" id="add-travel-btn">+</button>
+                </div>
+                <div id="travel-container">
+                    <!-- 旅行计划内容将通过JavaScript动态加载 -->
+                </div>
+            </section>
+            
+            <!-- 倒计时部分 -->
+            <section id="countdowns" class="content-section">
+                <div class="section-title">
+                    <span>重要日期</span>
+                    <button class="add-btn" id="add-countdown-btn">+</button>
+                </div>
+                <div id="countdowns-container">
+                    <!-- 倒计时内容将通过JavaScript动态加载 -->
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- 模态框 -->
+    <div class="modal" id="photo-modal">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h3>添加照片</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="photo-url">照片URL或Base64编码</label>
+                    <textarea id="photo-url" class="form-control" rows="3" placeholder="粘贴照片的URL或Base64编码"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="photo-desc">照片描述</label>
+                    <input type="text" id="photo-desc" class="form-control" placeholder="为照片添加描述">
+                </div>
+                <button class="btn" id="save-photo-btn">保存照片</button>
+            </div>
+    </div>
+    
+    <div class="modal" id="music-modal">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h3>添加音乐</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="music-title">歌曲标题</label>
+                    <input type="text" id="music-title" class="form-control" placeholder="歌曲名称">
+                </div>
+                <div class="form-group">
+                    <label for="music-artist">歌手</label>
+                    <input type="text" id="music-artist" class="form-control" placeholder="歌手名称">
+                </div>
+                <div class="form-group">
+                    <label for="music-url">音乐URL</label>
+                    <input type="text" id="music-url" class="form-control" placeholder="音乐文件链接">
+                </div>
+                <button class="btn" id="save-music-btn">保存音乐</button>
+            </div>
+    </div>
+    
+    <div class="modal" id="diary-modal">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h3>写日记</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="diary-title">日记标题</label>
+                    <input type="text" id="diary-title" class="form-control" placeholder="日记标题">
+                </div>
+                <div class="form-group">
+                    <label for="diary-content">日记内容</label>
+                    <textarea id="diary-content" class="form-control" rows="5" placeholder="记录今天的心情和故事"></textarea>
+                </div>
+                <button class="btn" id="save-diary-btn">保存日记</button>
+            </div>
+    </div>
+    
+    <div class="modal" id="travel-modal">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h3>添加旅行计划</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="travel-destination">目的地</label>
+                    <input type="text" id="travel-destination" class="form-control" placeholder="想去的地方">
+                </div>
+                <div class="form-group">
+                    <label for="travel-date">计划日期</label>
+                    <input type="date" id="travel-date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="travel-details">计划详情</label>
+                    <textarea id="travel-details" class="form-control" rows="3" placeholder="旅行计划和想法"></textarea>
+                </div>
+                <button class="btn" id="save-travel-btn">保存计划</button>
+            </div>
+    </div>
+    
+    <div class="modal" id="countdown-modal">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h3>添加重要日期</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="countdown-title">事件名称</label>
+                    <input type="text" id="countdown-title" class="form-control" placeholder="例如：纪念日、生日等">
+                </div>
+                <div class="form-group">
+                    <label for="countdown-date">日期</label>
+                    <input type="date" id="countdown-date" class="form-control">
+                </div>
+                <button class="btn" id="save-countdown-btn">保存日期</button>
+            </div>
+    </div>
+
+    <script>
+        // 数据存储和管理
+        const AppData = {
+            // 从localStorage加载数据或使用默认数据
+            photos: JSON.parse(localStorage.getItem('couplePhotos')) || [
+                {
+                    id: 1,
+                    src: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZmY5YTllIi8+CiAgPGNpcmNsZSBjeD0iMTUwIiBjeT0iMTUwIiByPSI4MCIgZmlsbD0iI2ZmNmI5MyIvPgo8L3N2Zz4=",
+                    caption: "我们的回忆"
+                }
+            ],
+            
+            songs: JSON.parse(localStorage.getItem('coupleSongs')) || [
+                {
+                    id: 1,
+                    title: "示例歌曲 - 爱的旋律",
+                    src: "#",
+                    artist: "示例歌手"
+                }
+            ],
+            
+            diaries: JSON.parse(localStorage.getItem('coupleDiaries')) || [
+                {
+                    id: 1,
+                    title: "我们的第一天",
+                    content: "今天是我们相识的第一天，一切都很美好。",
+                    date: new Date().toISOString().split('T')[0]
+                }
+            ],
+            
+            expenses: JSON.parse(localStorage.getItem('coupleExpenses')) || [],
+            
+            travelPlans: JSON.parse(localStorage.getItem('coupleTravelPlans')) || [
+                {
+                    id: 1,
+                    destination: "示例目的地",
+                    date: new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0],
+                    details: "这是我们计划的第一次旅行，非常期待！"
+                }
+            ],
+            
+            countdowns: JSON.parse(localStorage.getItem('coupleCountdowns')) || [
+                {
+                    id: 1,
+                    title: "我们的纪念日",
+                    date: "2024-12-25"
+                }
+            ],
+            
+            // 保存数据到localStorage
+            saveData: function() {
+                localStorage.setItem('couplePhotos', JSON.stringify(this.photos));
+                localStorage.setItem('coupleSongs', JSON.stringify(this.songs));
+                localStorage.setItem('coupleDiaries', JSON.stringify(this.diaries));
+                localStorage.setItem('coupleExpenses', JSON.stringify(this.expenses));
+                localStorage.setItem('coupleTravelPlans', JSON.stringify(this.travelPlans));
+                localStorage.setItem('coupleCountdowns', JSON.stringify(this.countdowns));
+            },
+            
+            // 生成新ID
+            generateId: function(array) {
+                return array.length > 0 ? Math.max(...array.map(item => item.id)) + 1 : 1;
+            }
+        };
+        
+        // 初始化标签切换功能
+        function initTabs() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // 添加active类到当前标签和对应内容
+                    tab.classList.add('active');
+                    document.getElementById(tab.dataset.tab).classList.add('active');
+                });
+            });
+        }
+        
+        // 初始化相册
+        function initAlbum() {
+            const albumContainer = document.getElementById('album-container');
+            
+            if (AppData.photos.length === 0) {
+                albumContainer.innerHTML = '<div class="empty-state">还没有照片，点击+添加第一张照片</div>';
+                return;
+            }
+            
+            albumContainer.innerHTML = '';
+            AppData.photos.forEach(photo => {
+                const albumItem = document.createElement('div');
+                albumItem.className = 'album-item';
+                albumItem.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.caption}" onclick="showPhotoDetail(${photo.id})">
+                `;
+                albumContainer.appendChild(albumItem);
+            });
+        }
+        
+        // 初始化音乐播放器
+        function initMusicPlayer() {
+            const playlistContainer = document.getElementById('playlist');
+            
+            if (AppData.songs.length === 0) {
+                playlistContainer.innerHTML = '<div class="empty-state">还没有添加音乐，点击+添加第一首歌曲</div>';
+                return;
+            }
+            
+            playlistContainer.innerHTML = '';
+            AppData.songs.forEach((song, index) => {
+                const songItem = document.createElement('div');
+                songItem.className = 'playlist-item';
+                if (index === 0) songItem.classList.add('active');
+                songItem.innerHTML = `
+                    <div><strong>${song.title}</strong></div>
+                    <div style="font-size: 0.8rem; color: #666;">${song.artist}</div>
+                `;
+                songItem.addEventListener('click', () => {
+                    document.querySelectorAll('.playlist-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    songItem.classList.add('active');
+                    document.getElementById('now-playing').textContent = `正在播放: ${song.title}`;
+                    // 在实际应用中，这里应该设置音频播放器的src
+                    // document.getElementById('audio-player').src = song.src;
+                });
+                playlistContainer.appendChild(songItem);
+            });
+        }
+        
+        // 初始化日记
+        function initDiary() {
+            const diaryContainer = document.getElementById('diary-container');
+            
+            if (AppData.diaries.length === 0) {
+                diaryContainer.innerHTML = '<div class="empty-state">还没有日记，点击+记录第一篇日记</div>';
+                return;
+            }
+            
+            diaryContainer.innerHTML = '';
+            AppData.diaries.forEach(diary => {
+                const diaryItem = document.createElement('div');
+                diaryItem.className = 'diary-item';
+                diaryItem.innerHTML = `
+                    <div class="diary-date">${diary.date}</div>
+                    <h3>${diary.title}</h3>
+                    <div class="diary-content">${diary.content}</div>
+                `;
+                diaryContainer.appendChild(diaryItem);
+            });
+        }
+        
+        // 初始化记账
+        function initExpense() {
+            const expenseContainer = document.getElementById('expense-container');
+            
+            if (AppData.expenses.length === 0) {
+                expenseContainer.innerHTML = '<div class="empty-state">还没有记账记录，点击+添加第一笔支出</div>';
+                return;
+            }
+            
+            expenseContainer.innerHTML = '';
+            let total = 0;
+            
+            AppData.expenses.forEach(expense => {
+                total += parseFloat(expense.amount);
+                const expenseItem = document.createElement('div');
+                expenseItem.className = 'expense-item';
+                expenseItem.innerHTML = `
+                    <div>
+                        <div>${expense.description}</div>
+                        <div style="font-size: 0.8rem; color: #666;">${expense.category} • ${expense.date}</div>
+                    </div>
+                    <div style="font-weight: bold;">¥${parseFloat(expense.amount).toFixed(2)}</div>
+                `;
+                expenseContainer.appendChild(expenseItem);
+            });
+            
+            // 添加总计
+            const totalItem = document.createElement('div');
+            totalItem.className = 'expense-item';
+            totalItem.style.borderTop = '2px solid #eee';
+            totalItem.style.fontWeight = 'bold';
+            totalItem.innerHTML = `
+                <div>总计</div>
+                <div>¥${total.toFixed(2)}</div>
+            `;
+            expenseContainer.appendChild(totalItem);
+        }
+        
+        // 初始化旅行计划
+        function initTravelPlans() {
+            const travelContainer = document.getElementById('travel-container');
+            
+            if (AppData.travelPlans.length === 0) {
+                travelContainer.innerHTML = '<div class="empty-state">还没有旅行计划，点击+添加第一个计划</div>';
+                return;
+            }
+            
+            travelContainer.innerHTML = '';
+            AppData.travelPlans.forEach(plan => {
+                const travelItem = document.createElement('div');
+                travelItem.className = 'travel-plan';
+                travelItem.innerHTML = `
+                    <div class="travel-date">${plan.date}</div>
+                    <div class="travel-destination">${plan.destination}</div>
+                    <div>${plan.details}</div>
+                `;
+                travelContainer.appendChild(travelItem);
+            });
+        }
+        
+        // 初始化倒计时
+        function initCountdowns() {
+            const countdownsContainer = document.getElementById('countdowns-container');
+            
+            if (AppData.countdowns.length === 0) {
+                countdownsContainer.innerHTML = '<div class="empty-state">还没有重要日期，点击+添加第一个日期</div>';
+                return;
+            }
+            
+            countdownsContainer.innerHTML = '';
+            AppData.countdowns.forEach(countdown => {
+                const countdownItem = document.createElement('div');
+                countdownItem.className = 'travel-plan';
+                
+                const targetDate = new Date(countdown.date);
+                const now = new Date();
+                const timeDiff = targetDate - now;
+                
+                let statusText = '';
+                if (timeDiff > 0) {
+                    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+                    statusText = `还有 ${days} 天`;
+                } else {
+                    statusText = '已过去';
+                }
+                
+                countdownItem.innerHTML = `
+                    <div class="travel-date">${countdown.date}</div>
+                    <div class="travel-destination">${countdown.title}</div>
+                    <div>${statusText}</div>
+                `;
+                countdownsContainer.appendChild(countdownItem);
+            });
+        }
+        
+        // 显示照片详情
+        function showPhotoDetail(id) {
+            const photo = AppData.photos.find(p => p.id === id);
+            if (photo) {
+                alert(`查看照片: ${photo.caption}\n\n点击确定关闭`);
+            }
+        }
+        
+        // 头像上传功能
+        function initAvatarUpload() {
+            const avatarInput = document.getElementById('avatar-input');
+            const avatarImg = document.getElementById('avatar-img');
+            const avatarUpload = document.getElementById('avatar-upload');
+            
+            avatarUpload.addEventListener('click', () => {
+                avatarInput.click();
+            });
+            
+            avatarInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        avatarImg.src = e.target.result;
+                        // 保存到localStorage
+                        localStorage.setItem('coupleAvatar', e.target.result);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // 加载保存的头像
+            const savedAvatar = localStorage.getItem('coupleAvatar');
+            if (savedAvatar) {
+                avatarImg.src = savedAvatar;
+            }
+        }
+        
+        // 模态框管理
+        function initModals() {
+            const modals = document.querySelectorAll('.modal');
+            const closeButtons = document.querySelectorAll('.close-modal');
+            
+            // 关闭模态框
+            closeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    modals.forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+            
+            // 添加照片按钮
+            document.getElementById('add-photo-btn').addEventListener('click', () => {
+                document.getElementById('photo-modal').style.display = 'flex';
+            });
+            
+            // 保存照片
+            document.getElementById('save-photo-btn').addEventListener('click', () => {
+                const url = document.getElementById('photo-url').value;
+                const desc = document.getElementById('photo-desc').value;
+                
+                if (url && desc) {
+                    const newPhoto = {
+                        id: AppData.generateId(AppData.photos),
+                        src: url,
+                        caption: desc
+                    };
+                    
+                    AppData.photos.push(newPhoto);
+                    AppData.saveData();
+                    initAlbum();
+                    document.getElementById('photo-modal').style.display = 'none';
+                    
+                    // 清空表单
+                    document.getElementById('photo-url').value = '';
+                    document.getElementById('photo-desc').value = '';
+                } else {
+                    alert('请填写完整的照片信息');
+                }
+            });
+            
+            // 添加音乐按钮
+            document.getElementById('add-music-btn').addEventListener('click', () => {
+                document.getElementById('music-modal').style.display = 'flex';
+            });
+            
+            // 保存音乐
+            document.getElementById('save-music-btn').addEventListener('click', () => {
+                const title = document.getElementById('music-title').value;
+                const artist = document.getElementById('music-artist').value;
+                const url = document.getElementById('music-url').value;
+                
+                if (title && artist && url) {
+                    const newSong = {
+                        id: AppData.generateId(AppData.songs),
+                        title: title,
+                        artist: artist,
+                        src: url
+                    };
+                    
+                    AppData.songs.push(newSong);
+                    AppData.saveData();
+                    initMusicPlayer();
+                    document.getElementById('music-modal').style.display = 'none';
+                    
+                    // 清空表单
+                    document.getElementById('music-title').value = '';
+                    document.getElementById('music-artist').value = '';
+                    document.getElementById('music-url').value = '';
+                } else {
+                    alert('请填写完整的音乐信息');
+                }
+            });
+            
+            // 添加日记按钮
+            document.getElementById('add-diary-btn').addEventListener('click', () => {
+                document.getElementById('diary-modal').style.display = 'flex';
+            });
+            
+            // 保存日记
+            document.getElementById('save-diary-btn').addEventListener('click', () => {
+                const title = document.getElementById('diary-title').value;
+                const content = document.getElementById('diary-content').value;
+                
+                if (title && content) {
+                    const newDiary = {
+                        id: AppData.generateId(AppData.diaries),
+                        title: title,
+                        content: content,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    
+                    AppData.diaries.push(newDiary);
+                    AppData.saveData();
+                    initDiary();
+                    document.getElementById('diary-modal').style.display = 'none';
+                    
+                    // 清空表单
+                    document.getElementById('diary-title').value = '';
+                    document.getElementById('diary-content').value = '';
+                } else {
+                    alert('请填写完整的日记信息');
+                }
+            });
+            
+            // 保存记账
+            document.getElementById('save-expense-btn').addEventListener('click', () => {
+                const desc = document.getElementById('expense-desc').value;
+                const amount = document.getElementById('expense-amount').value;
+                const category = document.getElementById('expense-category').value;
+                
+                if (desc && amount) {
+                    const newExpense = {
+                        id: AppData.generateId(AppData.expenses),
+                        description: desc,
+                        amount: parseFloat(amount).toFixed(2),
+                        category: category,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    
+                    AppData.expenses.push(newExpense);
+                    AppData.saveData();
+                    initExpense();
+                    
+                    // 清空表单
+                    document.getElementById('expense-desc').value = '';
+                    document.getElementById('expense-amount').value = '';
+                } else {
+                    alert('请填写完整的记账信息');
+                }
+            });
+            
+            // 添加旅行计划按钮
+            document.getElementById('add-travel-btn').addEventListener('click', () => {
+                document.getElementById('travel-modal').style.display = 'flex';
+            });
+            
+            // 保存旅行计划
+            document.getElementById('save-travel-btn').addEventListener('click', () => {
+                const destination = document.getElementById('travel-destination').value;
+                const date = document.getElementById('travel-date').value;
+                const details = document.getElementById('travel-details').value;
+                
+                if (destination && date) {
+                    const newTravel = {
+                        id: AppData.generateId(AppData.travelPlans),
+                        destination: destination,
+                        date: date,
+                        details: details
+                    };
+                    
+                    AppData.travelPlans.push(newTravel);
+                    AppData.saveData();
+                    initTravelPlans();
+                    document.getElementById('travel-modal').style.display = 'none';
+                    
+                    // 清空表单
+                    document.getElementById('travel-destination').value = '';
+                    document.getElementById('travel-date').value = '';
+                    document.getElementById('travel-details').value = '';
+                } else {
+                    alert('请填写完整的旅行计划信息');
+                }
+            });
+            
+            // 添加倒计时按钮
+            document.getElementById('add-countdown-btn').addEventListener('click', () => {
+                document.getElementById('countdown-modal').style.display = 'flex';
+            });
+            
+            // 保存倒计时
+            document.getElementById('save-countdown-btn').addEventListener('click', () => {
+                const title = document.getElementById('countdown-title').value;
+                const date = document.getElementById('countdown-date').value;
+                
+                if (title && date) {
+                    const newCountdown = {
+                        id: AppData.generateId(AppData.countdowns),
+                        title: title,
+                        date: date
+                    };
+                    
+                    AppData.countdowns.push(newCountdown);
+                    AppData.saveData();
+                    initCountdowns();
+                    document.getElementById('countdown-modal').style.display = 'none';
+                    
+                    // 清空表单
+                    document.getElementById('countdown-title').value = '';
+                    document.getElementById('countdown-date').value = '';
+                } else {
+                    alert('请填写完整的日期信息');
+                }
+            });
+        }
+        
+        // 更新倒计时
+        function updateCountdown() {
+            // 使用第一个倒计时日期作为主要倒计时
+            if (AppData.countdowns.length > 0) {
+                const targetDate = new Date(AppData.countdowns[0].date);
+                const now = new Date();
+                const timeLeft = targetDate - now;
+                
+                if (timeLeft < 0) {
+                    document.getElementById("countdown-days").textContent = "0";
+                    document.getElementById("countdown-hours").textContent = "0";
+                    document.getElementById("countdown-minutes").textContent = "0";
+                    document.getElementById("countdown-seconds").textContent = "0";
+                    return;
+                }
+                
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                document.getElementById("countdown-days").textContent = days;
+                document.getElementById("countdown-hours").textContent = hours;
+                document.getElementById("countdown-minutes").textContent = minutes;
+                document.getElementById("countdown-seconds").textContent = seconds;
+            }
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            initTabs();
+            initAlbum();
+            initMusicPlayer();
+            initDiary();
+            initExpense();
+            initTravelPlans();
+            initCountdowns();
+            initAvatarUpload();
+            initModals();
+            
+            // 更新倒计时
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // 页面加载动画
+            document.querySelector('.app-container').style.opacity = 0;
+            document.querySelector('.app-container').style.transform = 'translateY(20px)';
+            
+            setTimeout(function() {
+                document.querySelector('.app-container').style.transition = 'all 0.8s ease';
+                document.querySelector('.app-container').style.opacity = 1;
+                document.querySelector('.app-container').style.transform = 'translateY(0)';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
